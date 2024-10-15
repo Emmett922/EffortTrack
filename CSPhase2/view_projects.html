@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Current Projects</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="view-projects-container">
+        <h1>Effort Track</h1>
+        <p id="no-projects-message">No projects exist yet.</p>
+        <ul id="projects-list"></ul>
+    </div>
+
+    <script>
+        // Mock project data (replace this with actual project data from your back end)
+        const projects = [
+            {
+                title: 'Website Redesign',
+            },
+            {
+                title: 'Mobile App Development',
+            }
+        ];
+
+        const projectsList = document.getElementById('projects-list');
+        const noProjectsMessage = document.getElementById('no-projects-message');
+
+        function loadProjects() {
+            // Clear existing list content
+            projectsList.innerHTML = '';
+
+            // If no projects exist, show the "no projects" message
+            if (projects.length === 0) {
+                noProjectsMessage.style.display = 'block';
+            } else {
+                noProjectsMessage.style.display = 'none';
+                // Dynamically create list items for each project
+                projects.forEach(project => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('project-item');
+
+                    // Create title element
+                    const title = document.createElement('span');
+                    title.innerText = project.title;
+                    title.classList.add('project-title');
+                    listItem.appendChild(title);
+
+                    // Create edit button
+                    const editButton = document.createElement('button');
+                    editButton.innerText = 'Edit';
+                    editButton.classList.add('edit-button');
+                    editButton.onclick = function() {
+                        // Handle edit action here
+                        alert(`Edit ${project.title}`);
+                    };
+                    listItem.appendChild(editButton);
+
+                    // Create view requirements button
+                    const viewReqButton = document.createElement('button');
+                    viewReqButton.innerText = 'View Requirements';
+                    viewReqButton.classList.add('view-requirements-button');
+                    viewReqButton.onclick = function() {
+                        // Handle view requirements action here
+                        alert(`View requirements for ${project.title}`);
+                    };
+                    listItem.appendChild(viewReqButton);
+
+                    // Create view effort details button
+                    const viewEffortButton = document.createElement('button');
+                    viewEffortButton.innerText = 'View Effort Details';
+                    viewEffortButton.classList.add('view-effort-button');
+                    viewEffortButton.onclick = function() {
+                        // Handle view effort details action here
+                        alert(`View effort details for ${project.title}`);
+                    };
+                    listItem.appendChild(viewEffortButton);
+
+                    // Append list item to the list
+                    projectsList.appendChild(listItem);
+                });
+            }
+        }
+
+        // Load projects when the page loads
+        window.onload = loadProjects;
+    </script>
+</body>
+</html>

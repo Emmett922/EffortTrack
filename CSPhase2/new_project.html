@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Start New Project</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <div class="new_project_container">
+            <h1>Start New Project</h1>
+            <form id="projectForm">
+                <!-- Project Title -->
+                <div class="form-group">
+                    <label for="projectTitle">Project Title (required):</label>
+                    <input type="text" id="projectTitle" name="projectTitle" required>
+                </div>
+
+                <!-- Project Description -->
+                <div class="form-group">
+                    <label for="projectDescription">Project Description (required):</label>
+                    <textarea id="projectDescription" name="projectDescription" required></textarea>
+                </div>
+
+                <!-- Risks Section -->
+                <div class="form-section">
+                    <h3>Risks</h3>
+                    <div id="risks-container">
+                        <div class="risk-input">
+                            <input type="text" placeholder="Risk description" class="risk-description">
+                            <select class="risk-priority">
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" id="addRisk">Add Risk</button>
+                    <button type="button" id="removeRisk">Delete Risk</button>
+                </div>
+
+                <!-- Requirements Section -->
+                <div class="form-section">
+                    <h3>Requirements</h3>
+                    <div id="requirements-container">
+                        <input type="text" class="requirement" placeholder="Requirement">
+                    </div>
+                    <button type="button" id="addRequirement">Add Requirement</button>
+                    <button type="button" id="removeRequirement">Delete Requirement</button>
+                </div>
+
+                <!-- Team Members Section -->
+                <div class="form-section">
+                    <h3>Team Members</h3>
+                    <div id="team-container">
+                        <input type="text" class="team-member" placeholder="Team Member">
+                    </div>
+                    <button type="button" id="addTeamMember">Add Team Member</button>
+                    <button type="button" id="removeTeamMember">Delete Team Member</button>
+                </div>
+
+                <!-- Buttons -->
+                <div class="form-buttons">
+                    <button type="submit">Submit Project</button>
+                    <button type="button" id="cancelButton">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
