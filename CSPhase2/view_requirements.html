@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Requirements</title>
+    <link rel="stylesheet" href="css/view_requirements.css">
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="index.html">Home Page</a>
+    <a href="new_project.html">Create A New Project</a>
+    <a href="view_projects.html">View All Projects</a>
+  </div>
+
+
+  <div class="container">
+    <h1>Requirements for <span id="projectTitle"></span></h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Requirement ID</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Priority</th>
+          <th>Effort Log ID</th>
+        </tr>
+      </thead>
+      <tbody id="requirementsList">
+
+      </tbody>
+    </table>
+  </div>
+
+
+  <script>
+    const requirementsData = [
+    { requirementId: 201, type: 'Feature', description: 'Redesign homepage layout', priority: 'High', projectTitle: 'Website Redesign', effortLogId: 'E1' },
+    { requirementId: 202, type: 'Bug', description: 'Fix navigation menu issues', priority: 'Medium', projectTitle: 'Website Redesign', effortLogId: 'E2' },
+    { requirementId: 203, type: 'Enhancement', description: 'Improve website loading speed', priority: 'High', projectTitle: 'Website Redesign', effortLogId: 'E3' },
+    { requirementId: 301, type: 'Feature', description: 'Develop user authentication system', priority: 'High', projectTitle: 'Mobile App Development', effortLogId: 'E4' },
+    { requirementId: 302, type: 'Bug', description: 'Resolve crash on startup', priority: 'Critical', projectTitle: 'Mobile App Development', effortLogId: 'E5' },
+    { requirementId: 303, type: 'Enhancement', description: 'Add push notifications feature', priority: 'Medium', projectTitle: 'Mobile App Development', effortLogId: 'E6' },
+    ];
+
+    function getProjectTitle() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('project');
+    }
+
+    const projectTitle = getProjectTitle() || "Unknown Project";
+
+    document.getElementById('projectTitle').textContent += getProjectTitle() || "Unknown Project";
+
+    const requirementsList = document.getElementById('requirementsList');
+
+    requirementsData.forEach(req => {
+        if(req.projectTitle === projectTitle){
+          const row = document.createElement('tr');
+
+          row.innerHTML = `
+            <td>${req.requirementId}</td>
+            <td>${req.type}</td>
+            <td>${req.description}</td>
+            <td>${req.priority}</td>
+            <td>${req.effortLogId}</td>
+          `;
+
+          requirementsList.appendChild(row);
+        }
+      });
+
+    if (requirementsList.children.length === 0) {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td colspan="5">No requirements found for this project.</td>`;
+      requirementsList.appendChild(row);
+    }
+  </script>
+</body>
+</html>

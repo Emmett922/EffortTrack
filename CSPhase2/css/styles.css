@@ -154,3 +154,8 @@ button:disabled {
     color: #f8f9fa;
     flex-grow: 1; /* Allow the project title to grow and take space */
 }
+
+.nav{
+    position: fixed;
+    top: 0;
+}

@@ -63,7 +63,10 @@
                     viewReqButton.classList.add('view-requirements-button');
                     viewReqButton.onclick = function() {
                         // Handle view requirements action here
-                        alert(`View requirements for ${project.title}`);
+
+                        //For now, it takes it to a html page with dummy data.
+                        window.location.href = `view_requirements.html?project=${encodeURIComponent(project.title)}`;
+                        //alert(`View requirements for ${project.title}`);
                     };
                     listItem.appendChild(viewReqButton);
 
@@ -73,7 +76,8 @@
                     viewEffortButton.classList.add('view-effort-button');
                     viewEffortButton.onclick = function() {
                         // Handle view effort details action here
-                        alert(`View effort details for ${project.title}`);
+                        window.location.href = `view_effort_details.html?project=${encodeURIComponent(project.title)}`;
+                        //alert(`View effort details for ${project.title}`);
                     };
                     listItem.appendChild(viewEffortButton);
 

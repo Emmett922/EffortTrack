@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Effort Details</title>
+    <link rel="stylesheet" href="css/view_effort_details.css">
+</head>
+<body>
+  <div class="navbar">
+    <a href="index.html">Home Page</a>
+    <a href="new_project.html">Create A New Project</a>
+    <a href="view_projects.html">View All Projects</a>
+  </div>
+
+  <div class="container">
+      <h1 id="projectTitle">Effort Tracking Data For </h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Project Title</th>
+            <th>Manager ID</th>
+            <th>Requirement ID</th>
+            <th>Effort Amount</th>
+            <th>Time Period</th>
+            <th>Effort Log ID</th>
+          </tr>
+        </thead>
+        <tbody id="effortLogList">
+        </tbody>
+      </table>
+  </div>
+
+  <script>
+
+    const projectTitle = getProjectTitle();
+    function getProjectTitle() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('project') || "Unknown Project";
+    }
+    document.getElementById('projectTitle').textContent += getProjectTitle() || "Unknown Project";
+
+    const effortTrackingData = [
+      { projectTitle: 'Website Redesign', managerId: 101, requirementId: 201, effortAmount: 5, timePeriod: '2023-10-01', effortLogId: 'E1' },
+      { projectTitle: 'Website Redesign', managerId: 101, requirementId: 202, effortAmount: 3, timePeriod: '2023-10-02', effortLogId: 'E2' },
+      { projectTitle: 'Website Redesign', managerId: 101, requirementId: 203, effortAmount: 4, timePeriod: '2023-10-03', effortLogId: 'E3' },
+      { projectTitle: 'Mobile App Development', managerId: 102, requirementId: 301, effortAmount: 6, timePeriod: '2023-10-01', effortLogId: 'E4' },
+      { projectTitle: 'Mobile App Development', managerId: 102, requirementId: 302, effortAmount: 2, timePeriod: '2023-10-02', effortLogId: 'E5' },
+      { projectTitle: 'Mobile App Development', managerId: 102, requirementId: 303, effortAmount: 5, timePeriod: '2023-10-03', effortLogId: 'E6' },
+    ];
+
+    const effortLogList = document.getElementById('effortLogList');
+
+    effortTrackingData.forEach(log => {
+      if(log.projectTitle === projectTitle) {
+        const row = document.createElement('tr');
+        row.innerHTML= `
+          <td>${log.projectTitle}</td>
+          <td>${log.managerId}</td>
+          <td>${log.requirementId}</td>
+          <td>${log.effortAmount}</td>
+          <td>${log.timePeriod}</td>
+          <td>${log.effortLogId}</td>
+        `;
+        effortLogList.appendChild(row);
+      }
+    });
+
+    if(effortLogList.children.length === 0){
+      const row = document.createElement('tr');
+
+      row.innerHTML = `<td colspan="6"> No effort tracking data found for this project!</td>`;
+    }
+  </script>
+</body>
+</html>
