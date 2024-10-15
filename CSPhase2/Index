@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <h1>About EffortTrack:</h1>
+        <p>EffortTrack is a software that allows the tracking and computing of hours worked on any given project.
+            It supplies employers with the means to track each employees time usage, through logged hours and progress made.
+        </p>
+    </head>
+    <body>
+            <form name ="" action="">
+                <button name = "Start New Project"></button>
+            </form>
+
+            <form name ="" action="">
+                <button name = "View Current Projects"></button>
+            </form>
+    </body>
+</html>
