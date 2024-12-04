@@ -1,25 +1,32 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>EffortTrack</title>
-        <link rel="stylesheet" href="css/styles.css">
-    </head>
-    <body>
-        <div class="home_container">
-            <h1>EffortTrack</h1>
-            <p>
-                EffortTrack is a web-based project management application designed to help users keep track of essential project information and the effort 
-                expended on each project. It aims to streamline project management by providing a centralized platform for project creation, 
-                tracking, and analysis.
-            </p>
-            <form name="" action="">
-                <button type="button" onclick="window.location.href='new_project.html'">Start New Project</button>
-            </form>
-            <form>
-                <button type="button" onclick="window.location.href='view_projects.html'">View Current Projects</button>
-            </form name="" action="">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EffortTrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1-crypto-js.min.js"></script>
+</head>
+<body>
+    <div class="home_container">
+        <h1>Login to EffortTrack</h1>
+        <p>Please enter your username and password to access your account.</p>
+        
+        <form id="loginForm" action="" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        
+        <div class="form-buttons">
+            <p>Don't have an account? <a href="registration.html" style="color: #f8f9fa;">Register here</a></p>
         </div>
-    </body>
+    </div>
+</body>
 </html>

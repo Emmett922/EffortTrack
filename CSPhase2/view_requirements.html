@@ -13,7 +13,6 @@
     <a href="view_projects.html">View All Projects</a>
   </div>
 
-
   <div class="container">
     <h1>Requirements for <span id="projectTitle"></span></h1>
 
@@ -27,55 +26,64 @@
           <th>Effort Log ID</th>
         </tr>
       </thead>
-      <tbody id="requirementsList">
-
-      </tbody>
+      <tbody id="requirementsList"></tbody>
     </table>
   </div>
 
-
   <script>
-    const requirementsData = [
-    { requirementId: 201, type: 'Feature', description: 'Redesign homepage layout', priority: 'High', projectTitle: 'Website Redesign', effortLogId: 'E1' },
-    { requirementId: 202, type: 'Bug', description: 'Fix navigation menu issues', priority: 'Medium', projectTitle: 'Website Redesign', effortLogId: 'E2' },
-    { requirementId: 203, type: 'Enhancement', description: 'Improve website loading speed', priority: 'High', projectTitle: 'Website Redesign', effortLogId: 'E3' },
-    { requirementId: 301, type: 'Feature', description: 'Develop user authentication system', priority: 'High', projectTitle: 'Mobile App Development', effortLogId: 'E4' },
-    { requirementId: 302, type: 'Bug', description: 'Resolve crash on startup', priority: 'Critical', projectTitle: 'Mobile App Development', effortLogId: 'E5' },
-    { requirementId: 303, type: 'Enhancement', description: 'Add push notifications feature', priority: 'Medium', projectTitle: 'Mobile App Development', effortLogId: 'E6' },
-    ];
-
-    function getProjectTitle() {
+    // Function to extract the project title from the query string
+    async function getProjectTitle() {
       const params = new URLSearchParams(window.location.search);
       return params.get('project');
     }
 
-    const projectTitle = getProjectTitle() || "Unknown Project";
+    // Function to load requirements for the selected project
+    async function loadRequirements() {
+      const projectTitle = await getProjectTitle();
 
-    document.getElementById('projectTitle').textContent += getProjectTitle() || "Unknown Project";
+      // Display the project title in the header
+      document.getElementById('projectTitle').textContent = projectTitle || "Unknown Project";
 
-    const requirementsList = document.getElementById('requirementsList');
+      try {
+        // Fetch the project requirements from the Lambda API
+        const response = await fetch(`https://t4x46cdinxxndznfryjs4ayeuu0escwm.lambda-url.us-east-2.on.aws/projects/${encodeURIComponent(projectTitle)}/requirements`);
 
-    requirementsData.forEach(req => {
-        if(req.projectTitle === projectTitle){
-          const row = document.createElement('tr');
-
-          row.innerHTML = `
-            <td>${req.requirementId}</td>
-            <td>${req.type}</td>
-            <td>${req.description}</td>
-            <td>${req.priority}</td>
-            <td>${req.effortLogId}</td>
-          `;
-
-          requirementsList.appendChild(row);
+        // Check if the response was successful
+        if (!response.ok) {
+          throw new Error(`Failed to fetch requirements: ${response.statusText}`);
         }
-      });
 
-    if (requirementsList.children.length === 0) {
-      const row = document.createElement('tr');
-      row.innerHTML = `<td colspan="5">No requirements found for this project.</td>`;
-      requirementsList.appendChild(row);
+        const requirements = await response.json();
+
+        const requirementsList = document.getElementById('requirementsList');
+
+        // If no requirements found, display a message
+        if (requirements.length === 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td colspan="5">No requirements found for this project.</td>`;
+          requirementsList.appendChild(row);
+        } else {
+          // Populate the table with the requirements data
+          requirements.forEach(req => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${req.requirementId}</td>
+              <td>${req.type}</td>
+              <td>${req.description}</td>
+              <td>${req.priority}</td>
+              <td>${req.effortLogId}</td>
+            `;
+            requirementsList.appendChild(row);
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching project requirements:', error);
+      }
     }
+
+    // Load the requirements when the page is loaded
+    window.onload = loadRequirements;
   </script>
+
 </body>
 </html>

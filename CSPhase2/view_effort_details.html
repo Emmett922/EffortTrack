@@ -32,44 +32,63 @@
 
   <script>
 
-    const projectTitle = getProjectTitle();
-    function getProjectTitle() {
+    // Get project title from URL query parameter
+    async function getProjectTitle() {
       const params = new URLSearchParams(window.location.search);
       return params.get('project') || "Unknown Project";
     }
-    document.getElementById('projectTitle').textContent += getProjectTitle() || "Unknown Project";
 
-    const effortTrackingData = [
-      { projectTitle: 'Website Redesign', managerId: 101, requirementId: 201, effortAmount: 5, timePeriod: '2023-10-01', effortLogId: 'E1' },
-      { projectTitle: 'Website Redesign', managerId: 101, requirementId: 202, effortAmount: 3, timePeriod: '2023-10-02', effortLogId: 'E2' },
-      { projectTitle: 'Website Redesign', managerId: 101, requirementId: 203, effortAmount: 4, timePeriod: '2023-10-03', effortLogId: 'E3' },
-      { projectTitle: 'Mobile App Development', managerId: 102, requirementId: 301, effortAmount: 6, timePeriod: '2023-10-01', effortLogId: 'E4' },
-      { projectTitle: 'Mobile App Development', managerId: 102, requirementId: 302, effortAmount: 2, timePeriod: '2023-10-02', effortLogId: 'E5' },
-      { projectTitle: 'Mobile App Development', managerId: 102, requirementId: 303, effortAmount: 5, timePeriod: '2023-10-03', effortLogId: 'E6' },
-    ];
+    // Load effort tracking data for the project
+    async function loadEffortData() {
+      const projectTitle = await getProjectTitle();
 
-    const effortLogList = document.getElementById('effortLogList');
+      // Display the project title in the heading
+      document.getElementById('projectTitle').textContent += ` ${projectTitle}`;
 
-    effortTrackingData.forEach(log => {
-      if(log.projectTitle === projectTitle) {
+      try {
+        // Fetch effort tracking data from the backend API based on project title
+        const response = await fetch(`https://t4x46cdinxxndznfryjs4ayeuu0escwm.lambda-url.us-east-2.on.aws/projects/${encodeURIComponent(projectTitle)}/effort-tracking`);
+        
+        // Check if the response is successful
+        if (!response.ok) {
+          throw new Error('Failed to fetch effort tracking data');
+        }
+
+        const effortData = await response.json();
+        const effortLogList = document.getElementById('effortLogList');
+
+        // If no effort tracking data found, display a message
+        if (effortData.length === 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td colspan="6">No effort tracking data found for this project.</td>`;
+          effortLogList.appendChild(row);
+        } else {
+          // Populate the table with the effort tracking data
+          effortData.forEach(log => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${log.projectTitle}</td>
+              <td>${log.managerId}</td>
+              <td>${log.requirementId}</td>
+              <td>${log.effortAmount}</td>
+              <td>${log.timePeriod}</td>
+              <td>${log.effortLogId}</td>
+            `;
+            effortLogList.appendChild(row);
+          });
+        }
+      } catch (error) {
+        // Display error message if there is a problem with the API call
+        console.error('Error fetching effort tracking data:', error);
+        const effortLogList = document.getElementById('effortLogList');
         const row = document.createElement('tr');
-        row.innerHTML= `
-          <td>${log.projectTitle}</td>
-          <td>${log.managerId}</td>
-          <td>${log.requirementId}</td>
-          <td>${log.effortAmount}</td>
-          <td>${log.timePeriod}</td>
-          <td>${log.effortLogId}</td>
-        `;
+        row.innerHTML = `<td colspan="6">Error fetching effort tracking data. Please try again later.</td>`;
         effortLogList.appendChild(row);
       }
-    });
-
-    if(effortLogList.children.length === 0){
-      const row = document.createElement('tr');
-
-      row.innerHTML = `<td colspan="6"> No effort tracking data found for this project!</td>`;
     }
+
+    // Run the function to load effort data when the page is loaded
+    window.onload = loadEffortData;
   </script>
 </body>
 </html>
