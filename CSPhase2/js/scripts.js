@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Get user credentials
     const username = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
+    const password = document.getElementById("password").value;
 
     // Check if username and password are provided
     if (!username || !password) {
@@ -160,14 +160,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Encrypt the password before sending
-    const encryptedPassword = CryptoJS.AES.encrypt(
-      password,
-      "your-secret-key"
-    ).toString();
-
     // Attempt to login
-    loginUser(username, encryptedPassword);
+    loginUser(username, password);
   });
 
   // Handle user registration (new user creation)
@@ -177,21 +171,15 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault(); // Prevent form submission
 
       const username = document.getElementById("newUsername").value;
-      let password = document.getElementById("newPassword").value;
+      const password = document.getElementById("newPassword").value;
 
       if (!username || !password) {
         alert("Please provide both username and password.");
         return;
       }
 
-      // Encrypt the password before sending
-      const encryptedPassword = CryptoJS.AES.encrypt(
-        password,
-        "your-secret-key"
-      ).toString();
-
       // Attempt to register the user
-      registerUser(username, encryptedPassword);
+      registerUser(username, password);
     });
 
   function sortRisks() {
@@ -258,6 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         if (data.success) {
           alert("User registered successfully!");
+          window.location.href = "index.html"; // Redirect to login page
         } else {
           alert("Registration failed: " + data.error);
         }
