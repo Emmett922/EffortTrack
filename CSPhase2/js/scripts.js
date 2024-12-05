@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getCurrentUserId(username) {
     fetch(
-      "https://oh7tijl74zopgt4in53juml46q0lmejj.lambda-url.us-east-2.on.aws/?username=" +
+      "https://shwfinnbn3u66maa7seescqclq0ymvhh.lambda-url.us-east-2.on.aws/?username=" +
         encodeURIComponent(username),
       {
         method: "GET",
@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         fetch(
-          "https://oh7tijl74zopgt4in53juml46q0lmejj.lambda-url.us-east-2.on.aws/",
+          "https://shwfinnbn3u66maa7seescqclq0ymvhh.lambda-url.us-east-2.on.aws/",
           {
             method: "POST",
             headers: {
@@ -174,23 +174,31 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "index.html";
   });
 
-  // Handle login form submission
-  document.getElementById("loginForm").addEventListener("submit", (event) => {
-    event.preventDefault(); // Prevent form submission
+  // Handle user login request
+  try {
+    document.getElementById("loginForm").addEventListener("submit", (event) => {
+      event.preventDefault(); // Prevent form submission
 
-    // Get user credentials
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+      // Get user credentials
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
 
-    // Check if username and password are provided
-    if (!username || !password) {
-      alert("Please provide both username and password.");
-      return;
-    }
+      console.log("Form submitted");
+      console.log("Username:", username);
+      console.log("Password:", password);
 
-    // Attempt to login
-    loginUser(username, password);
-  });
+      // Check if username and password are provided
+      if (!username || !password) {
+        alert("Please provide both username and password.");
+        return;
+      }
+
+      // Directly call loginUser function from the form submit handler
+      loginUser(username, password);
+    });
+  } catch (error) {
+    console.error("Error attaching event listener:", error);
+  }
 
   // Handle user registration (new user creation)
   document
@@ -224,40 +232,45 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Handle user login request
-  function loginUser(username, encryptedPassword) {
-    fetch(
-      "https://oh7tijl74zopgt4in53juml46q0lmejj.lambda-url.us-east-2.on.aws/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          action: "login",
-          username,
-          password: encryptedPassword,
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          localStorage.setItem("username", username);
-          // Redirect to home page after successful login
-          window.location.href = "home.html";
-        } else {
-          alert("Login failed: " + data.error);
+  async function loginUser(username, password) {
+    try {
+      fetch(
+        "https://zf1zvi4ki9.execute-api.us-east-2.amazonaws.com/dev/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "login",
+            username: username,
+            password: password,
+          }),
         }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("Error logging in.");
-      });
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            localStorage.setItem("username", username);
+            // Redirect to home page after successful login
+            window.location.href = "home.html";
+          } else {
+            alert("Login failed: " + data.error);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Error logging in.");
+        });
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error logging in.");
+    }
   }
 
   function registerUser(username, encryptedPassword) {
     fetch(
-      "https://oh7tijl74zopgt4in53juml46q0lmejj.lambda-url.us-east-2.on.aws/",
+      "https://shwfinnbn3u66maa7seescqclq0ymvhh.lambda-url.us-east-2.on.aws/",
       {
         method: "POST",
         headers: {
