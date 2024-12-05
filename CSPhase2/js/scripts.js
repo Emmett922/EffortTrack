@@ -245,6 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Error logging in.");
     }
   }
+  
 
   function registerUser(username, encryptedPassword) {
     fetch(
