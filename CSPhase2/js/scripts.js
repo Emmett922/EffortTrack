@@ -59,116 +59,94 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  function getCurrentUserId(username) {
-    fetch(
-      "https://shwfinnbn3u66maa7seescqclq0ymvhh.lambda-url.us-east-2.on.aws/?username=" +
-        encodeURIComponent(username),
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("User not found or error retrieving data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Assuming the user data contains an `id` field
-        const userId = data.userId; // Adjust this based on the response structure from the backend
-        console.log("User ID: ", userId);
-        // You can now use the userId as needed
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
-
   document
     .getElementById("projectForm")
     .addEventListener("submit", function (event) {
-      event.preventDefault(); // Prevent form submission
+      event.preventDefault(); // Prevent default form submission
 
-      // Get form data
-      const projectTitle = document.getElementById("projectTitle").value;
-      const projectDescription =
-        document.getElementById("projectDescription").value;
-
-      const userId = getCurrentUserId();
-
-      // Get Risks
-      const risks = [];
-      document.querySelectorAll(".risk-input").forEach((riskInput) => {
-        const riskDescription =
-          riskInput.querySelector(".risk-description").value;
-        const riskPriority = riskInput.querySelector(".risk-priority").value;
-        risks.push({ description: riskDescription, priority: riskPriority });
-      });
-
-      // Get Requirements
-      const requirements = [];
-      document.querySelectorAll(".requirement").forEach((input) => {
-        requirements.push(input.value);
-      });
-
-      // Get Team Members
-      const teamMembers = [];
-      document.querySelectorAll(".team-member").forEach((input) => {
-        teamMembers.push(input.value);
-      });
-
-      // Get File (if any)
       const fileInput = document.getElementById("fileToUpload");
-      let fileBase64 = null;
       if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
-        // Convert file to base64
         const reader = new FileReader();
+
         reader.onloadend = function () {
-          fileBase64 = reader.result.split(",")[1]; // Get only the base64 string (without "data:image/png;base64,")
-          submitProject(fileBase64); // Submit project with file
+          const fileBase64 = reader.result.split(",")[1]; // Get Base64 string
+          submitProject(fileBase64);
         };
+
         reader.readAsDataURL(file);
       } else {
-        submitProject(); // Submit project without file
-      }
-
-      // Submit the project data to the Lambda backend
-      function submitProject(fileBase64 = null) {
-        const projectData = {
-          projectTitle,
-          projectDescription,
-          userId,
-          risks,
-          requirements,
-          teamMembers,
-          file: fileBase64, // Include the base64-encoded file or null
-        };
-
-        fetch(
-          "https://shwfinnbn3u66maa7seescqclq0ymvhh.lambda-url.us-east-2.on.aws/",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(projectData),
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Success:", data);
-            alert("Project submitted successfully!");
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert("Error submitting project.");
-          });
+        submitProject(null); // No file uploaded
       }
     });
+
+  // Submit the project data to the Lambda backend
+  function submitProject(fileBase64 = null) {
+    const projectTitle = document.getElementById("projectTitle").value;
+    const projectDescription =
+      document.getElementById("projectDescription").value;
+
+    // Get Risks
+    const risks = [];
+    document.querySelectorAll(".risk-input").forEach((riskInput) => {
+      const riskDescription =
+        riskInput.querySelector(".risk-description").value;
+      const riskPriority = riskInput.querySelector(".risk-priority").value;
+      risks.push({ description: riskDescription, priority: riskPriority });
+    });
+
+    // Get Requirements
+    const requirements = [];
+    document.querySelectorAll(".requirement").forEach((input) => {
+      requirements.push(input.value);
+    });
+
+    // Get Team Members
+    const teamMembers = [];
+    document.querySelectorAll(".team-member").forEach((input) => {
+      teamMembers.push(input.value);
+    });
+
+    const projectData = {
+      action: "createProject",
+      projectTitle,
+      projectDescription,
+      risks,
+      requirements,
+      teamMembers,
+      files: fileBase64
+        ? [
+            {
+              fileName: document.getElementById("fileToUpload").files[0].name,
+              fileContent: fileBase64,
+            },
+          ]
+        : [],
+    };
+
+    fetch(
+      "https://ltji7tuk5j.execute-api.us-east-2.amazonaws.com/dev/project",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(projectData),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Project submitted successfully!");
+        } else {
+          alert("Error: " + (data.error || "Unable to submit project."));
+        }
+      })
+      .catch((error) => {
+        console.error("Error submitting project:", error);
+        alert("Error submitting project.");
+      });
+  }
 
   document.getElementById("cancelButton").addEventListener("click", () => {
     window.location.href = "index.html";
@@ -235,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function loginUser(username, password) {
     try {
       fetch(
-        "https://zf1zvi4ki9.execute-api.us-east-2.amazonaws.com/dev/login",
+        "https://ltji7tuk5j.execute-api.us-east-2.amazonaws.com/dev/login",
         {
           method: "POST",
           headers: {
@@ -270,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function registerUser(username, encryptedPassword) {
     fetch(
-      "https://shwfinnbn3u66maa7seescqclq0ymvhh.lambda-url.us-east-2.on.aws/",
+      "https://ltji7tuk5j.execute-api.us-east-2.amazonaws.com/dev/register",
       {
         method: "POST",
         headers: {
