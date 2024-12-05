@@ -59,6 +59,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  function getCurrentUserId(username) {
+    fetch(
+      "https://oh7tijl74zopgt4in53juml46q0lmejj.lambda-url.us-east-2.on.aws/?username=" +
+        encodeURIComponent(username),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("User not found or error retrieving data");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Assuming the user data contains an `id` field
+        const userId = data.userId; // Adjust this based on the response structure from the backend
+        console.log("User ID: ", userId);
+        // You can now use the userId as needed
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   document
     .getElementById("projectForm")
     .addEventListener("submit", function (event) {
@@ -121,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         fetch(
-          "https://t4x46cdinxxndznfryjs4ayeuu0escwm.lambda-url.us-east-2.on.aws/",
+          "https://oh7tijl74zopgt4in53juml46q0lmejj.lambda-url.us-east-2.on.aws/",
           {
             method: "POST",
             headers: {
@@ -198,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Handle user login request
   function loginUser(username, encryptedPassword) {
     fetch(
-      "https://t4x46cdinxxndznfryjs4ayeuu0escwm.lambda-url.us-east-2.on.aws/",
+      "https://oh7tijl74zopgt4in53juml46q0lmejj.lambda-url.us-east-2.on.aws/",
       {
         method: "POST",
         headers: {
@@ -229,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function registerUser(username, encryptedPassword) {
     fetch(
-      "https://t4x46cdinxxndznfryjs4ayeuu0escwm.lambda-url.us-east-2.on.aws/",
+      "https://oh7tijl74zopgt4in53juml46q0lmejj.lambda-url.us-east-2.on.aws/",
       {
         method: "POST",
         headers: {
@@ -237,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         body: JSON.stringify({
           action: "register",
-          username,
+          username: username,
           password: encryptedPassword,
         }),
       }
@@ -254,34 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => {
         console.error("Error:", error);
         alert("Error registering user.");
-      });
-  }
-
-  function getCurrentUserId(username) {
-    fetch(
-      "https://t4x46cdinxxndznfryjs4ayeuu0escwm.lambda-url.us-east-2.on.aws/?username=" +
-        encodeURIComponent(username),
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("User not found or error retrieving data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Assuming the user data contains an `id` field
-        const userId = data.userId; // Adjust this based on the response structure from the backend
-        console.log("User ID: ", userId);
-        // You can now use the userId as needed
-      })
-      .catch((error) => {
-        console.error("Error:", error);
       });
   }
 
