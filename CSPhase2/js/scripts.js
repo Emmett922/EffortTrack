@@ -153,30 +153,26 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Handle user login request
-  try {
-    document.getElementById("loginForm").addEventListener("submit", (event) => {
-      event.preventDefault(); // Prevent form submission
+  document.getElementById("loginForm").addEventListener("submit", (event) => {
+    event.preventDefault(); // Stops the form from submitting or refreshing the page
 
-      // Get user credentials
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+    // Get user credentials
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-      console.log("Form submitted");
-      console.log("Username:", username);
-      console.log("Password:", password);
+    console.log("Form submitted");
+    console.log("Username:", username);
+    console.log("Password:", password);
 
-      // Check if username and password are provided
-      if (!username || !password) {
-        alert("Please provide both username and password.");
-        return;
-      }
+    // Validation
+    if (!username || !password) {
+      alert("Please provide both username and password.");
+      return;
+    }
 
-      // Directly call loginUser function from the form submit handler
-      loginUser(username, password);
-    });
-  } catch (error) {
-    console.error("Error attaching event listener:", error);
-  }
+    // Call API or handle credentials here
+    // loginUser(username, password);
+  });
 
   // Handle user registration (new user creation)
   document

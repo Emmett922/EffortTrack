@@ -11,7 +11,7 @@
         <h1>Login to EffortTrack</h1>
         <p>Please enter your username and password to access your account.</p>
         
-        <form id="loginForm" method="POST">
+        <form id="loginForm">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
@@ -28,6 +28,60 @@
         </div>
     </div>
 
-    <script src="js/scripts.js"></script>
+    <script>
+        // Event handler for the form submission
+        document.getElementById("loginForm").addEventListener("submit", (event) => {
+            event.preventDefault(); // Prevent the form from refreshing the page
+
+            // Get user credentials
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            console.log("Form submitted");
+            console.log("Username:", username);
+            console.log("Password:", password);
+
+            // Validation
+            if (!username || !password) {
+                alert("Please provide both username and password.");
+                return;
+            }
+
+            // Call the login function
+            loginUser(username, password);
+        });
+
+        // Function to handle user login
+        async function loginUser(username, password) {
+            try {
+                const response = await fetch("https://ltji7tuk5j.execute-api.us-east-2.amazonaws.com/dev/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        action: "login",
+                        username: username,
+                        password: password,
+                    }),
+                });
+        
+                console.log("Response:", response);
+        
+                const data = await response.json();
+                console.log("Response Data:", data);
+        
+                if (data.success) {
+                    localStorage.setItem("username", username);
+                    window.location.href = "home.html";
+                } else {
+                    alert("Login failed: " + (data.error || "Unknown error"));
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error logging in. Please try again later.");
+            }
+        }
+    </script>
 </body>
 </html>
